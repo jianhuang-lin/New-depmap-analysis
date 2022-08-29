@@ -9,34 +9,32 @@ hpdf[is.na(hpdf)] <- 0
 
 #create dataframe for delta, pvalue, mean
 delta_result <- as.data.frame(matrix(nrow=781, ncol =1993))
-p_result <- as.data.frame(matrix(nrow=781, ncol =865))
+p_result <- as.data.frame(matrix(nrow=781, ncol =1993))
 mean1_result <- as.data.frame(matrix(nrow=781, ncol =1993))
 mean0_result <- as.data.frame(matrix(nrow=781, ncol =1993))
 
 #create a progress bar starting, max represents the parameter you wanna based on
-pb <- txtProgressBar(min = 0, max = 865, style = 3)
+pb <- txtProgressBar(min = 0, max = 1993, style = 3)
 
-for (col1 in seq_len(865)) {
+for (col1 in seq_len(1993)) {
   #update the progress bar based on col1
   setTxtProgressBar(pb,col1)
   
-  for (col2 in 866:2772) {
+  for (col2 in 1994:2774) {
     a0 <- hpdf %>% select(colnames(hpdf[,c(col1,col2)])) %>% filter(hpdf[,col2]==0)
     a1 <- hpdf %>% select(colnames(hpdf[,c(col1,col2)])) %>% filter(hpdf[,col2]==1)
     mean0 <- mean(a0[,1])
     mean1 <- mean(a1[,1])
-    mean0_result[(col2-865),col1] = mean0
-    mean1_result[(col2-865),col1] = mean1
-    delta_result[(col2-865),col1]= mean1 - mean0
-    p_result[(col2-865),col1]=t.test(a0[,1], a1[,1], var.equal =TRUE)$p.value
+    mean0_result[(col2-1993),col1] = mean0
+    mean1_result[(col2-1993),col1] = mean1
+    delta_result[(col2-1993),col1]= mean1 - mean0
+    p_result[(col2-1993),col1]=t.test(a0[,1], a1[,1], var.equal =TRUE)$p.value
   }
   
 }
-close(pb)
+ close(pb)
 #-------------------------------------------------------------------------------
-#export dataframe to csv files
-write.table(rresult,"pro_rresult.csv", sep = ",", row.names = FALSE)
-write.table(presult,"pro_presult.csv", sep = ",", row.names = FALSE)
+
 
 #order pearson dataset
 delta_order <- order(delta_result)
